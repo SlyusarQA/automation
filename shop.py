@@ -105,15 +105,19 @@ def shop4():
 6. Используя явное ожидание, проверьте что в Subtotal отобразилась стоимость
 7. Используя явное ожидание, проверьте что в Total отобразилась стоимость """
 def shop5():
-    driver.implicitly_wait(5)
     driver.find_element_by_xpath("//a [contains(text(), 'Shop')]").click()
     driver.find_element_by_css_selector("[data-product_id='182']").click()
+    time.sleep(5)
     result1 = driver.find_element_by_css_selector("[class='cartcontents']").text
+    time.sleep(5)
     assert result1 == "1 Item"
     result2 = driver.find_element_by_css_selector("[class='amount']").text 
+    time.sleep(5)
     assert result2 == "₹180.00"
     driver.find_element_by_css_selector("[class='cartcontents']").click()
+    time.sleep(5)
     WebDriverWait(driver,20).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR,"[data-title='Subtotal']> span"),result2))
+    time.sleep(5)
     WebDriverWait(driver,20).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR,"[class='product-subtotal'] > span"),result2))
 """ Shop: работа в корзине
 Иногда, даже явные ожидания не помогают избежать ошибки при нахождении элемента, этот сценарий один из таких, используйте time.sleep()
@@ -177,21 +181,40 @@ def shop6():
 9. Используя явное ожидание, проверьте что отображается надпись "Thank you. Your order has been received."
 10. Используя явное ожидание, проверьте что в Payment Method отображается текст "Check Payments" """
 
-# driver.find_element_by_xpath("//a [contains(text(), 'Shop')]").click()
-# driver.execute_script("window.scrollTo(0,300)")
-# driver.find_element_by_css_selector("[data-product_id='182']").click()
-# time.sleep(3)
-# driver.find_element_by_css_selector("[class='cartcontents']").click()
-# time.sleep(3)
-# driver.find_element_by_css_selector(".wc-proceed-to-checkout >a").click()
-
-
-
+driver.find_element_by_xpath("//a [contains(text(), 'Shop')]").click()
+driver.execute_script("window.scrollTo(0,300)")
+driver.find_element_by_css_selector("[data-product_id='182']").click()
+time.sleep(3)
+driver.find_element_by_css_selector("[class='cartcontents']").click()
+time.sleep(3)
+driver.find_element_by_css_selector(".wc-proceed-to-checkout >a").click()
+driver.find_element_by_id("billing_first_name").send_keys("Sergey")
+driver.find_element_by_id("billing_last_name").send_keys("Slyusar")
+driver.find_element_by_id("billing_email").send_keys("mail@mail.ru")
+driver.find_element_by_id("billing_phone").send_keys("89995557799")
+driver.find_element_by_css_selector("span>[role='presentation']").click()
+time.sleep(2)
+driver.find_element_by_id("s2id_autogen1_search").send_keys("Russia")
+time.sleep(2)
+driver.find_element_by_css_selector("span.select2-match").click()
+time.sleep(2)
+driver.find_element_by_id("billing_address_1").send_keys("Lenin str. 22")
+driver.find_element_by_id("billing_state").send_keys("Moscow")
+driver.find_element_by_id("billing_city").send_keys("Moscow")
+driver.find_element_by_id("billing_postcode").send_keys("662640")
+driver.execute_script("window.scrollTo(0,600)")
+time.sleep(5)
+driver.find_element_by_id("payment_method_cheque").click()
+time.sleep(2)
+driver.find_element_by_id("place_order").click()
+time.sleep(5)
+assert WebDriverWait(driver,30).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR,"div>.woocommerce-thankyou-order-received"),"Thank you. Your order has been received.")) == True
+assert WebDriverWait(driver,30).until(EC.text_to_be_present_in_element((By.XPATH,"//tfoot/tr[3]/td"),"Check Payments")) == True
 #shop1()
 #shop2()
 #shop3()
 #shop4()
-shop5()
+#shop5()
 #shop6()
 #shop7()
 
